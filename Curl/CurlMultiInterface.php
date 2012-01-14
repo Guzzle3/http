@@ -1,26 +1,24 @@
 <?php
 
-namespace Guzzle\Http\Pool;
+namespace Guzzle\Http\Curl;
 
+use Guzzle\Common\HasDispatcherInterface;
+use Guzzle\Common\ExceptionCollection;
 use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Common\Event\Subject;
 
 /**
  * Execute a pool of {@see RequestInterface} objects in
  * parallel.
- *
- * @author  michael@guzzlephp.org
  */
-interface PoolInterface extends Subject, \Countable
+interface CurlMultiInterface extends HasDispatcherInterface, \Countable
 {
-    // Various states of the pool's request cycle
-    const BEFORE_SEND = 'before_send';
-    const POLLING = 'polling';
-    const POLLING_REQUEST = 'polling_request';
-    const COMPLETE = 'complete';
-    const ADD_REQUEST = 'add_request';
-    const REMOVE_REQUEST = 'remove_request';
-    const RESET = 'reset';
+    const BEFORE_SEND = 'curl_multi.before_send';
+    const POLLING = 'curl_multi.polling';
+    const POLLING_REQUEST = 'curl_multi.polling_request';
+    const COMPLETE = 'curl_multi.complete';
+    const ADD_REQUEST = 'curl_multi.add_request';
+    const REMOVE_REQUEST = 'curl_multi.remove_request';
+    const MULTI_EXCEPTION = 'curl_multi.exception';
 
     const STATE_IDLE = 'idle';
     const STATE_SENDING = 'sending';
@@ -30,6 +28,8 @@ interface PoolInterface extends Subject, \Countable
      * Add a request to the pool.
      *
      * @param RequestInterface $request Returns the Request that was added
+     *
+     * @return CurlMultiInterface
      */
     function add(RequestInterface $request);
 
@@ -52,14 +52,16 @@ interface PoolInterface extends Subject, \Countable
      *
      * @param RequestInterface $request Request to detach.
      *
-     * @return RequestInterface Returns the Request object that was removed
+     * @return CurlMultiInterface
      */
     function remove(RequestInterface $request);
 
     /**
-     * Reset the state of the Pool and remove any attached RequestInterface objects
+     * Reset the state of the multi and remove any attached RequestInterface objects
+     *
+     * @param bool $hard (optional) Set to TRUE to close any open multi handles
      */
-    function reset();
+    function reset($hard = false);
 
     /**
      * Send a pool of {@see RequestInterface} requests.
@@ -68,8 +70,7 @@ interface PoolInterface extends Subject, \Countable
      *
      * @return array|bool Returns an array of attached Request objects on
      *      success FALSE on failure.
-     *
-     * @throws PoolRequestException if any requests threw exceptions during the
+     * @throws ExceptionCollection if any requests threw exceptions during the
      *      transfer.
      */
     function send();
