@@ -1,8 +1,8 @@
 <?php
 
-namespace Guzzle\Http;
+namespace Guzzle\Http\Exception;
 
-use Guzzle\Common\GuzzleException;
+use Guzzle\Common\Exception\GuzzleException;
 
 /**
  * Http exception interface
