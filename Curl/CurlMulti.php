@@ -353,10 +353,10 @@ class CurlMulti extends AbstractHasDispatcher implements CurlMultiInterface
      */
     private function checkCurlResult($code)
     {
-        if ($code != CURLM_OK && $code != CURLM_CALL_MULTI_PERFORM) {
+        if ($code !== CURLM_OK && $code !== CURLM_CALL_MULTI_PERFORM) {
             throw new CurlException(isset($this->multiErrors[$code])
                 ? "cURL error: {$code} ({$this->multiErrors[$code][0]}): cURL message: {$this->multiErrors[$code][1]}"
-                : 'Unexpected cURL error: ' . $code
+                : 'Unexpected cURL error: ' . ($code === false ? 'false' : $code)
             );
         }
     }
