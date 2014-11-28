@@ -43,6 +43,13 @@ class EntityEnclosingRequest extends Request implements EntityEnclosingRequestIn
 
         return parent::__toString() . $this->body;
     }
+    
+    public function __clone()
+    {
+        $this->postFields = clone ($this->postFields);
+        
+        parent::__clone();
+    }
 
     public function setState($state, array $context = array())
     {
