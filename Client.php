@@ -83,6 +83,9 @@ class Client extends AbstractHasDispatcher implements ClientInterface
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     final public function setConfig($config)
     {
         if ($config instanceof Collection) {
@@ -96,6 +99,9 @@ class Client extends AbstractHasDispatcher implements ClientInterface
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     final public function getConfig($key = false)
     {
         return $key ? $this->config[$key] : $this->config;
@@ -131,6 +137,9 @@ class Client extends AbstractHasDispatcher implements ClientInterface
         return $this->config->getPath($keyOrPath);
     }
 
+    /**
+     * @inheritdoc
+     */
     final public function setSslVerification($certificateAuthority = true, $verifyPeer = true, $verifyHost = 2)
     {
         $opts = $this->config[self::CURL_OPTIONS] ?: array();
@@ -169,6 +178,9 @@ class Client extends AbstractHasDispatcher implements ClientInterface
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function createRequest($method = 'GET', $uri = null, $headers = null, $body = null, array $options = array())
     {
         if (!$uri) {
@@ -201,11 +213,17 @@ class Client extends AbstractHasDispatcher implements ClientInterface
         return $this->prepareRequest($this->requestFactory->create($method, (string) $url, $headers, $body), $options);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getBaseUrl($expand = true)
     {
         return $expand ? $this->expandTemplate($this->baseUrl) : $this->baseUrl;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function setBaseUrl($url)
     {
         $this->baseUrl = $url;
@@ -213,6 +231,9 @@ class Client extends AbstractHasDispatcher implements ClientInterface
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function setUserAgent($userAgent, $includeDefault = false)
     {
         if ($includeDefault) {
@@ -235,6 +256,9 @@ class Client extends AbstractHasDispatcher implements ClientInterface
             . ' PHP/' . PHP_VERSION;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function get($uri = null, $headers = null, $options = array())
     {
         // BC compat: $options can be a string, resource, etc to specify where the response body is downloaded
@@ -243,36 +267,57 @@ class Client extends AbstractHasDispatcher implements ClientInterface
             : $this->createRequest('GET', $uri, $headers, $options);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function head($uri = null, $headers = null, array $options = array())
     {
         return $this->createRequest('HEAD', $uri, $headers, null, $options);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete($uri = null, $headers = null, $body = null, array $options = array())
     {
         return $this->createRequest('DELETE', $uri, $headers, $body, $options);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function put($uri = null, $headers = null, $body = null, array $options = array())
     {
         return $this->createRequest('PUT', $uri, $headers, $body, $options);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function patch($uri = null, $headers = null, $body = null, array $options = array())
     {
         return $this->createRequest('PATCH', $uri, $headers, $body, $options);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function post($uri = null, $headers = null, $postBody = null, array $options = array())
     {
         return $this->createRequest('POST', $uri, $headers, $postBody, $options);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function options($uri = null, array $options = array())
     {
         return $this->createRequest('OPTIONS', $uri, $options);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function send($requests)
     {
         if (!($requests instanceof RequestInterface)) {
@@ -317,6 +362,10 @@ class Client extends AbstractHasDispatcher implements ClientInterface
         return $this->curlMulti;
     }
 
+    /**
+     * @param RequestFactoryInterface $factory
+     * @return $this
+     */
     public function setRequestFactory(RequestFactoryInterface $factory)
     {
         $this->requestFactory = $factory;
